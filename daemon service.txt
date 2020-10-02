@@ -1,0 +1,75 @@
+service - (name it : deploy.service)
+
+
+[Unit]
+Description=Deployment Service
+
+[Service]
+Type=simple
+PIDFile=/run/deploy.pid
+ExecStart=/bin/bash -c ". /home/rgi-bkp/sbi_env/bin/activate;cd /home/rgi-bkp/RGI_Pipeline_v2;gunicorn --bind 0.0.0.0:8071 wsgi:app -w 6"
+User=rgi-bkp
+Group=rgi-bkp
+WorkingDirectory=/home/rgi-bkp/RGI_Pipeline_v2
+Restart=always
+RestartSec=10
+
+[Install]
+WantedBy=multi-user.target
+
+
+
+
+
+
+commands start and auto start service - 
+
+ sudo cp deploy.service /etc/systemd/system/
+
+
+# Use the enable command to ensure that the service starts whenever the system boots
+ sudo systemctl enable deploy.service
+
+ sudo systemctl daemon-reload
+ sudo systemctl start deploy.service
+ systemctl status deploy.service 
+ sudo systemctl restart deploy.service
+
+
+
+
+
+To see Process - 
+  ps -ef | grep deploy
+
+
+
+
+
+
+systemd commands for service - 
+
+
+systemctl start SERVICE - Use it to start a service. Does not persist after reboot
+
+systemctl stop SERVICE - Use it to stop a service. Does not persist after reboot
+
+systemctl restart SERVICE - Use it to restart a service
+
+systemctl reload SERVICE - If the service supports it, it will reload the config files related to it without interrupting any process that is using the service.
+
+systemctl status SERVICE - Shows the status of a service. Tells whether a service is currently running.
+
+systemctl enable SERVICE - Turns the service on, on the next reboot or on the next start event. It persists after reboot.
+
+systemctl disable SERVICE - Turns the service off on the next reboot or on the next stop event. It persists after reboot.
+
+systemctl is-enabled SERVICE - Check if a service is currently configured to start or not on the next reboot.
+
+systemctl is-active SERVICE - Check if a service is currently active.
+
+systemctl show SERVICE - Show all the information about the service.
+
+sudo systemctl mask SERVICE - Completely disable a service by linking it to /dev/null; you cannot start the service manually or enable the service.
+
+sudo systemctl unmask SERVICE - Removes the link to /dev/null and restores the ability to enable and or manually start the service.
